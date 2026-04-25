@@ -3,6 +3,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
+from sklearn.decomposition import PCA
 
 def plot_reconstructions(model, dataset, n=10, is_vae=False, noise_factor=0.0):
     """Plots original, noisy (optional), and reconstructed images."""
@@ -63,7 +64,7 @@ def plot_generated_images(decoder, latent_dim, n=10):
     plt.close()
 
 def plot_latent_space_2d(encoder, dataset):
-    """Plots a 2D projection of the latent space."""
+    """Plots a 2D projection of the latent space using PCA."""
     z_means = []
     for batch in dataset.take(50):
         images = batch[0]
@@ -72,13 +73,14 @@ def plot_latent_space_2d(encoder, dataset):
     
     z_means = np.concatenate(z_means, axis=0)
     
-    # If latent_dim > 2, we use the first two dimensions for a simple 2D plot.
-    # For a formal report, PCA or t-SNE can be applied here.
+    pca = PCA(n_components=2)
+    z_means_2d = pca.fit_transform(z_means)
+    
     plt.figure(figsize=(8, 6))
-    plt.scatter(z_means[:, 0], z_means[:, 1], alpha=0.5, s=2)
-    plt.xlabel("Latent Dimension 1")
-    plt.ylabel("Latent Dimension 2")
-    plt.title("Latent Space 2D Visualization")
+    plt.scatter(z_means_2d[:, 0], z_means_2d[:, 1], alpha=0.5, s=2)
+    plt.xlabel("Principal Component 1")
+    plt.ylabel("Principal Component 2")
+    plt.title("Latent Space 2D Visualization (PCA)")
     plt.savefig("latent_space.png")
     plt.close()
 

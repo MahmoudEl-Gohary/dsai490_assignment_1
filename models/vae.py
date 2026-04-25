@@ -58,6 +58,11 @@ class VAE(Model):
             self.kl_loss_tracker,
         ]
 
+    def call(self, inputs, training=False):
+        """Passes inputs through the encoder and decoder."""
+        z_mean, z_log_var, z = self.encoder(inputs)
+        return self.decoder(z)
+
     def train_step(self, data):
         # tf.data returns a tuple of (x, x) from our dataset pipeline.
         if isinstance(data, tuple):

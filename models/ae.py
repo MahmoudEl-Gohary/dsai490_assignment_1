@@ -11,7 +11,7 @@ def build_autoencoder(input_shape=(64, 64, 1), latent_dim=64):
     x = layers.Conv2D(32, 3, activation="relu", strides=2, padding="same")(encoder_inputs)
     x = layers.Conv2D(64, 3, activation="relu", strides=2, padding="same")(x)
     x = layers.Flatten()(x)
-    latent_outputs = layers.Dense(latent_dim, activation="relu")(x)
+    latent_outputs = layers.Dense(latent_dim)(x)
     
     encoder = Model(encoder_inputs, latent_outputs, name="encoder")
     
